@@ -1,1 +1,82 @@
 <h1>Hello Load Calc!</h1>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+
+<div id="app">
+    <h2>{{ message }} mm<sup>2</sup></h2>
+    <h4>R: {{ loadR }}%</h4>
+    <h4>Y: {{ loadY }}%</h4>
+    <h4>B: {{ loadB }}%</h4>
+</div>
+
+<script>
+    var load = 80
+    var loadType = 'Villas'
+    var meters = 2
+    var currentLoad = [310, 270, 281]
+    var maxLoad = 400
+
+    var demandFactorMap = {
+        'Villas': 0.6,
+        'flat':	0.6,
+        'Palaces':	0.6,
+    }
+
+    var cableSizeMap = [
+        [28, 1.5],
+        [36, 2.5],
+        [47, 4],
+        [59, 6],
+        [79, 10],
+        [102, 16],
+        [131, 25],
+        [157, 35],
+        [187, 50],
+        [229, 70],
+        [274, 95],
+        [312, 120],
+        [349, 150],
+        [394, 185],
+        [455, 240],
+    ]
+
+    function diversityFactor(n){
+        if(n === 1) return 1.0
+        if(n === 2) return 0.9
+        if(n === 3) return 0.9
+        if(n === 4) return 0.8
+        if(n === 5) return 0.8
+        if(n === 6) return 0.7
+        if(n === 7) return 0.7
+        if(n === 8) return 0.7
+        if(n === 9) return 0.7
+        return 0.6
+    }
+
+    function cableSize(amp){
+        for (i = 0; i < cableSizeMap.length; i++) {
+            if(cableSizeMap[i][0] > amp){
+                return cableSizeMap[i][1]
+            }
+        }
+    }
+
+    //calculation
+    var demandFactor = demandFactorMap[loadType]
+    var demandLoad = load * demandFactor
+    var cable = cableSize(demandLoad)
+    var divFactor = diversityFactor(meters)
+    var extraLoad = demandLoad * divFactor * 1.742
+
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'cable: 4C-' + cable + '-[1R]',
+            loadR: Math.round((currentLoad[0] + extraLoad) / 400 * 100),
+            loadY: Math.round((currentLoad[1] + extraLoad) / 400 * 100),
+            loadB: Math.round((currentLoad[2] + extraLoad) / 400 * 100)
+        }
+    })
+</script>
