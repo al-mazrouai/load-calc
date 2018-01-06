@@ -1,1 +1,279 @@
-<h1>Hello Load Calc!</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+  integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="./rangeslider/rangeslider.css">
+  <title>Load Calculator</title>
+</head>
+<body>
+    <div class="container">
+  <h1 class="display-4">Load</h1>
+    <form>
+        <select class="form-control" id="loadtype" name="loadtype">
+            <optgroup label="Residentail">
+            <option value="0.6">Villas</option>
+            <option value="0.6">Flat</option>
+            <option value="0.6">Palace</option>
+            </optgroup>
+            <optgroup label="Commercial">
+            <option value="0.6">Shop</option>
+            <option value="0.6">Workshop</option>
+            <option value="0.6">Store</option>
+            <option value="0.6">Office</option>
+            <option value="0.6">Petrol Station</option>
+            <option value="0.6">Supermarket</option>
+            <option value="0.6">Mall</option>
+            <option value="0.6">Hotel</option>
+            <option value="0.6">Furnished Flat</option>
+            <option value="0.8">Government Building</option>
+            <option value="0.8">Hospital</option>
+            <option value="0.8">School</option>
+            <option value="0.8">Club</option>
+            <option value="0.9">Mosque</option>
+            <option value="0.9">Gold Shop</option>
+            <option value="0.9">Street Light</option>
+            </optgroup>
+            <optgroup label="Industrial">
+            <option value="0.9">Industry</option>
+            <option value="0.9">Factory</option>
+            </optgroup>
+            <optgroup label="Agriculture">
+                <option value="0.9">Big Farms</option>
+                <option value="0.9">Livestock</option>
+                <option value="0.9">Dairy</option>
+                <option value="0.9">Farm</option>
+                <option value="0.9">Prodiction Farm</option>
+                <option value="0.9">Greenhouse</option>
+            </optgroup>
+        </select>
+
+        <input id="load" class="form-control" type="number" name="load" align="center" placeholder="Load (KW)">
+        <h1 id="cable" class="display-4">4C XXX [XR]</h1>
+        <input id="meter" class="form-control" type="number" name="meter" align="center" placeholder="Meters">
+ 
+ 
+        <div class="input-group">
+            <input id="curLoadR" name="curLoadR" type="range" min="0" max="400" step="1" value="150" data-rangeslider>
+            <div class="load-value" id="curloadRout">150</div>
+        </div>
+
+        <div class="input-group">
+            <input id="curLoadY" name="curLoadY" type="range" min="0" max="400" step="1" value="100" data-rangeslider>
+            <div class="load-value" id="curloadYout">100</div>
+        </div>
+
+        <div class="input-group">
+            <input id="curLoadB" name="curLoadB" type="range" min="0" max="400" step="1" value="200" data-rangeslider>
+            <div class="load-value" id="curloadBout">200</div>
+        </div>
+    
+        <select class="form-control" id="maxload" name="maxload">
+            <option value="400" selected>Feeder 400A</option>
+            <option value="2787">Transformer 2000KVA</option>
+            <option value="2229">Transformer 1600KVA</option>
+            <option value="1393">Transformer 1000KVA</option>
+            <option value="696">Transformer 500KVA</option>
+        </select>
+    </form>
+    <div class="progress">
+      <div id="utilR" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
+    </div>
+    <div class="progress">
+        <div id="utilY" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
+    </div>
+    <div class="progress">
+        <div id="utilB" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
+    </div>
+    <div class="footer"></div>
+  </div><!-- jQuery first, then Tether, then Bootstrap JS. -->
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity=
+  "sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script> 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity=
+  "sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script> 
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity=
+  "sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+  <script src="./rangeslider/rangeslider.min.js"></script>
+  <script>
+  $(function() {
+
+    var cableSizeMap = [
+      [28, 1.5],
+      [36, 2.5],
+      [47, 4],
+      [59, 6],
+      [79, 10],
+      [102, 16],
+      [131, 25],
+      [157, 35],
+      [187, 50],
+      [229, 70],
+      [274, 95],
+      [312, 120],
+      [349, 150],
+      [394, 185],
+      [455, 240],
+    ]
+
+    function cablesNumber(n){
+      return Math.floor(n / 455) + 1
+    }
+
+    function diversityFactor(n){
+      if(n === 2) return 0.9
+      if(n === 3) return 0.9
+      if(n === 4) return 0.8
+      if(n === 5) return 0.8
+      if(n === 6) return 0.7
+      if(n === 7) return 0.7
+      if(n === 8) return 0.7
+      if(n === 9) return 0.7
+      if(n > 9) return 0.6
+      return 1.0
+    }
+
+    function cableSize(amp){
+      for (i = 0; i < cableSizeMap.length; i++) {
+        if(cableSizeMap[i][0] > amp){
+          return cableSizeMap[i][1]
+        }
+      }
+    }
+
+    function updateProg(e, v){
+      v = Math.round(v*100) || 0
+      e.html(v + "%").css('width', v + "%")
+      if(v >= 90){e.addClass("bg-danger")}
+      else{e.removeClass("bg-danger")}
+    }
+    
+    function updateUtilization(R, Y, B){
+      updateProg($("#utilR"), R)
+      updateProg($("#utilY"), Y)
+      updateProg($("#utilB"), B)
+    }
+
+    var DATA = {'LT':0.6, 'L': NaN, 'M': NaN, 'LR': 150, 'LY': 100, 'LB': 200, 'ML': 400}
+    function update(data){
+      DATA = Object.assign(DATA, data)
+
+      var demandFactor = DATA.LT
+      var demandLoad = DATA.L * DATA.LT
+      var cables = cablesNumber(demandLoad)
+      console.log(demandLoad, cables, demandLoad/cables)
+      console.log(cableSize(demandLoad/cables))
+      $("#cable").html("4C " + (cableSize(demandLoad/cables) || "XXX") + " [" + (cables || "X")+ "R]")
+
+      var divFactor = diversityFactor(DATA.M)
+      var extraLoad = demandLoad * divFactor * 1.742
+
+      updateUtilization(
+        (DATA.LR + extraLoad) / DATA.ML,
+        (DATA.LY + extraLoad) / DATA.ML,
+        (DATA.LB + extraLoad) / DATA.ML
+      )
+
+    }
+
+    $("#loadtype").change(function() {update({'LT': parseFloat($(this).val())})});
+    $("#load").keyup(function() {update({'L': parseFloat($(this).val())})});
+    $("#load").change(function() {update({'L': parseFloat($(this).val())})});
+    $("#meter").keyup(function() {update({'M': parseFloat($(this).val())})});
+    $("#meter").change(function() {update({'M': parseFloat($(this).val())})});
+    $("#maxload").change(function() {update({'ML': parseFloat($(this).val())})});
+
+    $('#curLoadR').rangeslider({
+      polyfill: false,
+      onInit: function() {$('#curloadRout').html(this.value)},
+      onSlide: function(position, value) {
+        $('#curloadRout').html(value); update({'LR': this.value})
+      }
+    });
+
+    $('#curLoadY').rangeslider({
+      polyfill: false,
+      onInit: function() {$('#curloadYout').html(this.value)},
+      onSlide: function(position, value) {
+        $('#curloadYout').html(value); update({'LY': this.value})
+      }
+    });
+
+    $('#curLoadB').rangeslider({
+      polyfill: false,
+      onInit: function() {$('#curloadBout').html(this.value)},
+      onSlide: function(position, value) {
+        $('#curloadBout').html(value); update({'LB': this.value})
+      }
+    });
+  })
+  </script>
+
+  <style>
+  .progress{
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+  }
+  .progress-bar {
+      height: 2rem;
+      line-height: 2rem;
+  }
+  .rangeslider {
+      margin-top: 20px;
+      margin-bottom: 20px;
+  }
+
+  .form-control{
+      margin-top:20px;
+      margin-bottom: 20px;
+  }
+  input {
+    text-align: center; 
+  }
+  h1{
+      text-align: center;
+  }
+
+  #js-rangeslider-0 > .rangeslider__fill{
+      background: #dc3545;
+  }
+
+  #js-rangeslider-1 > .rangeslider__fill{
+      background: #ffc107;
+  }
+
+  #js-rangeslider-2 > .rangeslider__fill{
+      background: #007bff;
+  }
+  .footer {
+      height: 50px;
+  }
+
+  .display-4{
+    font-size: 2rem;
+  }
+
+  .load-value{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    width: 80px;
+    text-align: center;
+    font-size: 1.6rem;
+  }
+  
+  </style>
+</body>
+</html>
