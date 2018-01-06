@@ -114,7 +114,7 @@
   <script>
   $(function() {
 
-    var cableSizeMap = [
+    var cableSizeHome = [
       [28, 1.5],
       [36, 2.5],
       [47, 4],
@@ -128,6 +128,11 @@
       [274, 95],
       [312, 120],
       [349, 150],
+      [394, 185],
+      [455, 240],
+    ]
+
+    var cableSizeStation = [
       [394, 185],
       [455, 240],
     ]
@@ -149,10 +154,10 @@
       return 1.0
     }
 
-    function cableSize(amp){
-      for (i = 0; i < cableSizeMap.length; i++) {
-        if(cableSizeMap[i][0] > amp){
-          return cableSizeMap[i][1]
+    function cableSize(amp, mapping){
+      for (i = 0; i < mapping.length; i++) {
+        if(mapping[i][0] > amp){
+          return mapping[i][1]
         }
       }
     }
@@ -170,14 +175,19 @@
       updateProg($("#utilB"), B, "B")
     }
 
+    function updateCableSize(load){
+      var cables = cablesNumber(load)
+      var cableMap = cables > 1 ? cableSizeStation : cableSizeHome
+      $("#cable").html("4C " + (cableSize(load/cables, cableMap) || "XXX") + " [" + (cables || "X")+ "R]")
+    }
+
     var DATA = {'LT':0.6, 'L': NaN, 'M': NaN, 'LR': 260, 'LY': 270, 'LB': 280, 'ML': 400}
     function update(data){
       DATA = Object.assign(DATA, data)
 
       var demandFactor = DATA.LT
       var demandLoad = DATA.L * DATA.LT
-      var cables = cablesNumber(demandLoad * 2.5)
-      $("#cable").html("4C " + (cableSize(demandLoad/cables) || "XXX") + " [" + (cables || "X")+ "R]")
+      updateCableSize(demandLoad * 2.5);
 
       var divFactor = diversityFactor(DATA.M)
       var extraLoad = demandLoad * divFactor * 1.742
