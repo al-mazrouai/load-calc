@@ -65,28 +65,28 @@
         </select>
 
         <div class="input-group">
-            <input id="curLoadR" name="curLoadR" type="range" min="0" max="400" step="1" value="150" data-rangeslider>
-            <div class="load-value" id="curloadRout">150</div>
+            <input id="curLoadR" name="curLoadR" type="range" min="0" max="400" step="1" value="260" data-rangeslider>
+            <div class="load-value" id="curloadRout">260</div>
         </div>
 
         <div class="input-group">
-            <input id="curLoadY" name="curLoadY" type="range" min="0" max="400" step="1" value="100" data-rangeslider>
-            <div class="load-value" id="curloadYout">100</div>
+            <input id="curLoadY" name="curLoadY" type="range" min="0" max="400" step="1" value="270" data-rangeslider>
+            <div class="load-value" id="curloadYout">270</div>
         </div>
 
         <div class="input-group">
-            <input id="curLoadB" name="curLoadB" type="range" min="0" max="400" step="1" value="200" data-rangeslider>
-            <div class="load-value" id="curloadBout">200</div>
+            <input id="curLoadB" name="curLoadB" type="range" min="0" max="400" step="1" value="280" data-rangeslider>
+            <div class="load-value" id="curloadBout">280</div>
         </div>    
     </form>
     <div class="progress">
-      <div id="utilR" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
+      <div id="utilR" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">R: 0%</div>
     </div>
     <div class="progress">
-        <div id="utilY" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
+        <div id="utilY" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Y: 0%</div>
     </div>
     <div class="progress">
-        <div id="utilB" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
+        <div id="utilB" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">B: 0%</div>
     </div>
     <div class="footer bd-footer text-muted">
       <p>Muscat Electricity Distribution Company</p>
@@ -151,20 +151,20 @@
       }
     }
 
-    function updateProg(e, v){
+    function updateProg(e, v, name){
       v = Math.round(v*100) || 0
-      e.html(v + "%").css('width', v + "%")
+      e.html(name + ": " + v + "%").css('width', v + "%")
       if(v >= 90){e.addClass("bg-danger")}
       else{e.removeClass("bg-danger")}
     }
     
     function updateUtilization(R, Y, B){
-      updateProg($("#utilR"), R)
-      updateProg($("#utilY"), Y)
-      updateProg($("#utilB"), B)
+      updateProg($("#utilR"), R, "R")
+      updateProg($("#utilY"), Y, "Y")
+      updateProg($("#utilB"), B, "B")
     }
 
-    var DATA = {'LT':0.6, 'L': NaN, 'M': NaN, 'LR': 150, 'LY': 100, 'LB': 200, 'ML': 400}
+    var DATA = {'LT':0.6, 'L': NaN, 'M': NaN, 'LR': 260, 'LY': 270, 'LB': 280, 'ML': 400}
     function update(data){
       DATA = Object.assign(DATA, data)
 
