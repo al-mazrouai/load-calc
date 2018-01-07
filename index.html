@@ -172,7 +172,9 @@
     function updateCableSize(load){
       var cables = cablesNumber(load)
       var cableMap = cables > 1 ? cableSizeStation : cableSizeHome
-      $("#cable").html("4C " + (cableSize(load/cables, cableMap) || "XXX") + " [" + (cables || "X")+ "R]")
+      var typ = load ? cableSize(load/cables, cableMap) : "XXX"
+      var num = load ? cables : "X"
+      $("#cable").html("4C " + typ + " [" + num + "R]")
     }
 
     var DATA = {'LT':0.6, 'L': 0, 'M': 1, 'LR': 260, 'LY': 270, 'LB': 280, 'ML': 400}
